@@ -1,5 +1,7 @@
 extern crate clap;
 extern crate notify;
+#[macro_use]
+extern crate shell;
 
 use std::env;
 use std::sync::mpsc::channel;
@@ -8,7 +10,7 @@ use std::time::Duration;
 use clap::{App, Arg, SubCommand};
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 
-fn watch(path: &str) -> notify::Result<()> {
+fn watch(path: &str, command: &str) -> notify::Result<()> {
     let (tx, rx) = channel();
 
     let mut watcher: RecommendedWatcher = try!(Watcher::new(tx, Duration::from_secs(1)));
@@ -17,7 +19,9 @@ fn watch(path: &str) -> notify::Result<()> {
 
     loop {
         match rx.recv() {
-            Ok(event) => println!("{:?}", event),
+            Ok(event) => {
+                cmd!(command).run().unwrap();
+            }
             Err(e) => println!("watch error: {:?}", e),
         }
     }
@@ -43,7 +47,11 @@ fn main() {
                 .index(1)
                 .required(true),
         ).get_matches();
-    if let Err(e) = watch(matches.value_of("path").unwrap()) {
+
+    if let Err(e) = watch(
+        matches.value_of("path").unwrap(),
+        matches.value_of("COMMAND").unwrap(),
+    ) {
         println!("error: {:?}", e)
     }
 }
