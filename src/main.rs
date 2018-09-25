@@ -11,6 +11,9 @@ use subprocess::Exec;
 
 fn exec(m: &ArgMatches) {
     let command = m.value_of("COMMAND").unwrap();
+    if m.is_present("verbose") {
+        println!("{}", command);
+    }
     Exec::shell(command).join().expect("Failed");
 }
 
@@ -23,19 +26,17 @@ fn watch(m: &clap::ArgMatches) -> notify::Result<()> {
 
     loop {
         match rx.recv() {
-            Ok(event) => {
-                if m.is_present("verbose") {
-                    println!("{:?}", event);
+            Ok(event) => match event {
+                notify::DebouncedEvent::Create { .. } => exec(m),
+                notify::DebouncedEvent::Write { .. } => exec(m),
+                notify::DebouncedEvent::Remove { .. } => exec(m),
+                notify::DebouncedEvent::Rename { .. } => exec(m),
+                _ => {
+                    if m.is_present("verbose") {
+                        println!("Ignoring event: {:?}", event);
+                    }
                 }
-
-                match event {
-                    notify::DebouncedEvent::Create { .. } => exec(m),
-                    notify::DebouncedEvent::Write { .. } => exec(m),
-                    notify::DebouncedEvent::Remove { .. } => exec(m),
-                    notify::DebouncedEvent::Rename { .. } => exec(m),
-                    _ => (),
-                }
-            }
+            },
             Err(e) => println!("watch error: {:?}", e),
         }
     }
