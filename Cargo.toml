@@ -1,7 +1,9 @@
 [package]
 name = "watchdog"
+description = "Watch filesystem for changes and then run a command"
 version = "0.1.0"
 authors = ["Josh Hawkins <hawkins@users.noreply.github.com>"]
+license = "MIT"
 
 [dependencies]
 notify = "4.0.6"
