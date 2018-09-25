@@ -5,6 +5,6 @@ authors = ["Josh Hawkins <hawkins@users.noreply.github.com>"]
 
 [dependencies]
 notify = "4.0.6"
-shell = { git = "https://github.com/google/rust-shell" }
 assert_fs = "0.9.0"
 clap = "2.32.0"
+subprocess = "0.1.16"

@@ -1,21 +1,17 @@
 extern crate clap;
 extern crate notify;
-#[macro_use]
-extern crate shell;
+extern crate subprocess;
 
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
 use clap::{App, Arg, ArgMatches};
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
-
-struct Options {
-    debug: bool,
-}
+use subprocess::Exec;
 
 fn exec(m: &ArgMatches) {
-    // TODO: Support Windows
-    cmd!(m.value_of("COMMAND").unwrap()).run();
+    let command = m.value_of("COMMAND").unwrap();
+    Exec::shell(command).join().expect("Failed");
 }
 
 fn watch(m: &clap::ArgMatches) -> notify::Result<()> {
