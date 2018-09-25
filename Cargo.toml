@@ -1,0 +1,8 @@
+[package]
+name = "watchdog"
+version = "0.1.0"
+authors = ["Josh Hawkins <hawkins@users.noreply.github.com>"]
+
+[dependencies]
+notify = "4.0.6"
+
