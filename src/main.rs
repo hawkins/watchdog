@@ -7,7 +7,7 @@ use std::env;
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
-use clap::{App, Arg, SubCommand};
+use clap::{App, Arg};
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 
 fn watch(path: &str, command: &str) -> notify::Result<()> {
@@ -20,7 +20,7 @@ fn watch(path: &str, command: &str) -> notify::Result<()> {
     loop {
         match rx.recv() {
             Ok(event) => {
-                cmd!(command).run().unwrap();
+                cmd!(command).run();
             }
             Err(e) => println!("watch error: {:?}", e),
         }
