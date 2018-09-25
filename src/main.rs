@@ -1,9 +1,12 @@
+extern crate clap;
 extern crate notify;
 
-use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 use std::env;
 use std::sync::mpsc::channel;
 use std::time::Duration;
+
+use clap::{App, Arg, SubCommand};
+use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 
 fn watch(path: &str) -> notify::Result<()> {
     let (tx, rx) = channel();
@@ -22,8 +25,25 @@ fn watch(path: &str) -> notify::Result<()> {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    println!("{}", args[1]);
-    if let Err(e) = watch(&args[1]) {
+    let matches = App::new("Watchdog")
+        .version("0.1")
+        .author("Josh Hawkins <hawkins@users.noreply.github.com>")
+        .about("Watches the filesystem for changes and runs tasks in response")
+        .arg(
+            Arg::with_name("path")
+                .short("p")
+                .long("path")
+                .help("Path used for matching files")
+                .value_name("FILE/FOLDER")
+                .takes_value(true)
+                .required(true),
+        ).arg(
+            Arg::with_name("COMMAND")
+                .help("Command ran on response to changes")
+                .index(1)
+                .required(true),
+        ).get_matches();
+    if let Err(e) = watch(matches.value_of("path").unwrap()) {
         println!("error: {:?}", e)
     }
 }

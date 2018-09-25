@@ -5,4 +5,5 @@ authors = ["Josh Hawkins <hawkins@users.noreply.github.com>"]
 
 [dependencies]
 notify = "4.0.6"
-
+assert_fs = "0.9.0"
+clap = "2.32.0"
