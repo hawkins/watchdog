@@ -23,3 +23,10 @@ OPTIONS:
 ARGS:
     <COMMAND>    Command ran on response to changes
 ```
+
+## Goals
+
+- [ ] Pattern match files to watch via regular expressions (#1)
+- [ ] Sensible Make interop (#4)
+- Simple, out-of-the-way API
+  - It's a simple problem. Therefore, keep the solution simple, too, stupid.
