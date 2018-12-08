@@ -20,9 +20,9 @@ fn exec(m: &ArgMatches) {
 fn watch(m: &clap::ArgMatches) -> notify::Result<()> {
     let (tx, rx) = channel();
 
-    let mut watcher: RecommendedWatcher = try!(Watcher::new(tx, Duration::from_secs(1)));
+    let mut watcher: RecommendedWatcher = Watcher::new(tx, Duration::from_secs(1))?;
 
-    try!(watcher.watch(m.value_of("path").unwrap(), RecursiveMode::Recursive));
+    watcher.watch(m.value_of("path").unwrap(), RecursiveMode::Recursive)?;
 
     loop {
         match rx.recv() {
