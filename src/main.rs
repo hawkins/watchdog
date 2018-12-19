@@ -22,7 +22,7 @@ fn exec(m: &ArgMatches) {
     Exec::shell(command).join().expect("Failed");
 }
 
-fn visitor(watcher: &mut notify::FsEventWatcher, entry: &DirEntry) {
+fn visitor(watcher: &mut notify::RecommendedWatcher, entry: &DirEntry) {
     match entry.path().to_str() {
         Some(path) => {
             // TODO: Verbose flag
