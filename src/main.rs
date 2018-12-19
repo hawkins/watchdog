@@ -80,8 +80,16 @@ fn watch(m: &clap::ArgMatches) -> notify::Result<()> {
             // TODO: Find files that fit this pattern
             visit_dirs(&globmatcher, &mut watcher, Path::new("."), &visitor)?;
         }
-    } else if let Some(path) = m.value_of("path") {
-        watcher.watch(path, RecursiveMode::Recursive)?;
+    } else if let Some(paths) = m.values_of("path") {
+        let paths: Vec<_> = paths.collect();
+        for path in paths {
+            match watcher.watch(path, RecursiveMode::Recursive) {
+                Ok(_) => {}
+                Err(e) => panic!("Could not watch path `{}`: {}", path, e),
+            }
+        }
+    } else {
+        panic!("No means specified to match files - did you forget to use a path or glob?");
     }
 
     loop {
@@ -104,7 +112,7 @@ fn watch(m: &clap::ArgMatches) -> notify::Result<()> {
 
 fn main() {
     let matches = App::new("Watchdog")
-        .version("0.1")
+        .version("0.2")
         .author("Josh Hawkins <hawkins@users.noreply.github.com>")
         .about("Watches the filesystem for changes and runs tasks in response")
         .arg(
@@ -115,11 +123,10 @@ fn main() {
         )
         .arg(
             Arg::with_name("path")
-                .short("p")
-                .long("path")
-                .help("Path used for matching files")
-                .value_name("FILE/FOLDER")
-                .takes_value(true),
+                .help("File path(s) used for matching files")
+                .value_name("PATH")
+                .multiple(true)
+                .last(true),
         )
         .arg(
             Arg::with_name("verbose")
