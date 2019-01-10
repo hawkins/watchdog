@@ -95,10 +95,30 @@ fn watch(m: &clap::ArgMatches) -> notify::Result<()> {
     loop {
         match rx.recv() {
             Ok(event) => match event {
-                notify::DebouncedEvent::Create { .. } => exec(m),
-                notify::DebouncedEvent::Write { .. } => exec(m),
-                notify::DebouncedEvent::Remove { .. } => exec(m),
-                notify::DebouncedEvent::Rename { .. } => exec(m),
+                notify::DebouncedEvent::Create { .. } => {
+                    if m.is_present("verbose") {
+                        println!("Processing Create event: {:?}", event);
+                    }
+                    exec(m)
+                }
+                notify::DebouncedEvent::Write { .. } => {
+                    if m.is_present("verbose") {
+                        println!("Processing Write event: {:?}", event);
+                    }
+                    exec(m)
+                }
+                notify::DebouncedEvent::Remove { .. } => {
+                    if m.is_present("verbose") {
+                        println!("Processing Remove event: {:?}", event);
+                    }
+                    exec(m)
+                }
+                notify::DebouncedEvent::Rename { .. } => {
+                    if m.is_present("verbose") {
+                        println!("Processing Rename event: {:?}", event);
+                    }
+                    exec(m)
+                }
                 _ => {
                     if m.is_present("verbose") {
                         println!("Ignoring event: {:?}", event);
@@ -111,8 +131,10 @@ fn watch(m: &clap::ArgMatches) -> notify::Result<()> {
 }
 
 fn main() {
+    const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
     let matches = App::new("Watchdog")
-        .version("0.2")
+        .version(VERSION)
         .author("Josh Hawkins <hawkins@users.noreply.github.com>")
         .about("Watches the filesystem for changes and runs tasks in response")
         .arg(
