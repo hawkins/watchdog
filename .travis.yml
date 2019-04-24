@@ -26,7 +26,10 @@ deploy:
       condition: "$TRAVIS_RUST_VERSION = stable"
       #branch: master
     before_deploy:
+      - ls target
+      - ls target/release/*
       - mv target/release/watchdog "target/release/watchdog-$TRAVIS_TAG-$TRAVIS_OS_NAME"
+      - ls target/release/*
     file:
       - target/release/watchdog-*
     api_key:
