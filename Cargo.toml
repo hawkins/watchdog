@@ -1,7 +1,7 @@
 [package]
 name = "watchdog"
 description = "Watch filesystem for changes and then run a command"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["Josh Hawkins <hawkins@users.noreply.github.com>"]
 license = "MIT"
 edition = "2018"

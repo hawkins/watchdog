@@ -18,7 +18,7 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-      condition: "$TRAVIS_RUST_VERSION = stable"
+      condition: "$TRAVIS_RUST_VERSION = stable AND $TRAVIS_OS_NAME = linux"
       branch: master
     token:
       secure: Dg+pn916bFB1b6Yk9QrnB8DnjBKc9fD7g0cGATWTGu5FwCYpkMrlLaW5F+JSK20Wb89tSkCO61+/b6OrT5gsp5K+ubd6TnHg/IyeXM6b01hb7jWg52FwJEaJdQBYmr6Q9ePzd/7nBg13nYsymzlTPEY6ZnCj2fTJMiplvzsx6S5P3Gbd5lM1rfJNWLdnCeAIJ9z9me0F4XKg4vvrb1eHtLfhufJ3p9RjsgIcvl/XN6ENkYKsJX8vzo1A/RIIcQRubGpPLcdan8T75xFJ13PtBkHoxwHN2r8HmlBlSDJBgmZch6fKIC5PG00LYGNMeKrhNZuGfN5OGly6htqKmYKLNFdQTGz0HpGrY/oNw3Eg7BiJiuplPOj1QDnkrVPwCxLcfb/fKYv+tHAnnX3aGPksdlP8lzjOXgP+AILWMUxL3W/frKKXAPt5KLikd6N8VUcgroUTR7GTU5fMAYt6dqLJugY/Z6U9YMitgj2T0wE6bVU7jbWehobYEZ7pMp2k6+dZZJ7KBNUyEyeNhb+zwwPCXbYOGLRCUPUrXjYH6e74WlxILO/yMMPkw7CHDvVcTB0nVu6MBu0DLJQovm1zVEtsYt3dWB1/FX14U5K8hs7DUehClv+zyEeUN7o1e2AivrI9eTLkvl5zgXt9HpppL4XfQgX+D7YkBwNQtJAD2clu54Q=
