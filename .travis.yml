@@ -12,7 +12,7 @@ os:
   - linux
   - osx
 before_deploy:
-  - mv target/release/watchdog "target/release/watchdog-$TRAVIS_TAG-$TRAVIS_OS_NAME"
+  - "if [[ -f target/release/watchdog ]]; then mv target/release/watchdog \"target/release/watchdog-$TRAVIS_TAG-$TRAVIS_OS_NAME\"; fi"
 deploy:
   - provider: cargo
     skip_cleanup: true
