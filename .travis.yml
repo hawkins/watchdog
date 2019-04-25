@@ -1,21 +1,35 @@
 language: rust
 rust:
-- stable
-- beta
-- nightly
+  - stable
+  - beta
+  - nightly
+script: cargo build --verbose --release; cargo test --verbose
 matrix:
   allow_failures:
-  - rust: nightly
+    - rust: nightly
   fast_finish: true
 os:
-- linux
-- osx
+  - linux
+  - osx
+before_deploy:
+  - mv target/release/watchdog "target/release/watchdog-$TRAVIS_TAG-$TRAVIS_OS_NAME"
 deploy:
-  provider: cargo
-  skip_cleanup: true
-  on:
-    tags: true
-    condition: "$TRAVIS_RUST_VERSION = stable"
-    branch: master
-  token:
-    secure: Dg+pn916bFB1b6Yk9QrnB8DnjBKc9fD7g0cGATWTGu5FwCYpkMrlLaW5F+JSK20Wb89tSkCO61+/b6OrT5gsp5K+ubd6TnHg/IyeXM6b01hb7jWg52FwJEaJdQBYmr6Q9ePzd/7nBg13nYsymzlTPEY6ZnCj2fTJMiplvzsx6S5P3Gbd5lM1rfJNWLdnCeAIJ9z9me0F4XKg4vvrb1eHtLfhufJ3p9RjsgIcvl/XN6ENkYKsJX8vzo1A/RIIcQRubGpPLcdan8T75xFJ13PtBkHoxwHN2r8HmlBlSDJBgmZch6fKIC5PG00LYGNMeKrhNZuGfN5OGly6htqKmYKLNFdQTGz0HpGrY/oNw3Eg7BiJiuplPOj1QDnkrVPwCxLcfb/fKYv+tHAnnX3aGPksdlP8lzjOXgP+AILWMUxL3W/frKKXAPt5KLikd6N8VUcgroUTR7GTU5fMAYt6dqLJugY/Z6U9YMitgj2T0wE6bVU7jbWehobYEZ7pMp2k6+dZZJ7KBNUyEyeNhb+zwwPCXbYOGLRCUPUrXjYH6e74WlxILO/yMMPkw7CHDvVcTB0nVu6MBu0DLJQovm1zVEtsYt3dWB1/FX14U5K8hs7DUehClv+zyEeUN7o1e2AivrI9eTLkvl5zgXt9HpppL4XfQgX+D7YkBwNQtJAD2clu54Q=
+  - provider: cargo
+    skip_cleanup: true
+    on:
+      tags: true
+      condition: "$TRAVIS_RUST_VERSION = stable"
+      branch: master
+    token:
+      secure: Dg+pn916bFB1b6Yk9QrnB8DnjBKc9fD7g0cGATWTGu5FwCYpkMrlLaW5F+JSK20Wb89tSkCO61+/b6OrT5gsp5K+ubd6TnHg/IyeXM6b01hb7jWg52FwJEaJdQBYmr6Q9ePzd/7nBg13nYsymzlTPEY6ZnCj2fTJMiplvzsx6S5P3Gbd5lM1rfJNWLdnCeAIJ9z9me0F4XKg4vvrb1eHtLfhufJ3p9RjsgIcvl/XN6ENkYKsJX8vzo1A/RIIcQRubGpPLcdan8T75xFJ13PtBkHoxwHN2r8HmlBlSDJBgmZch6fKIC5PG00LYGNMeKrhNZuGfN5OGly6htqKmYKLNFdQTGz0HpGrY/oNw3Eg7BiJiuplPOj1QDnkrVPwCxLcfb/fKYv+tHAnnX3aGPksdlP8lzjOXgP+AILWMUxL3W/frKKXAPt5KLikd6N8VUcgroUTR7GTU5fMAYt6dqLJugY/Z6U9YMitgj2T0wE6bVU7jbWehobYEZ7pMp2k6+dZZJ7KBNUyEyeNhb+zwwPCXbYOGLRCUPUrXjYH6e74WlxILO/yMMPkw7CHDvVcTB0nVu6MBu0DLJQovm1zVEtsYt3dWB1/FX14U5K8hs7DUehClv+zyEeUN7o1e2AivrI9eTLkvl5zgXt9HpppL4XfQgX+D7YkBwNQtJAD2clu54Q=
+  - provider: releases
+    skip_cleanup: true
+    on:
+      tags: true
+      condition: "$TRAVIS_RUST_VERSION = stable"
+      branch: master
+    file_glob: true
+    file:
+      - target/release/watchdog-*
+    api_key:
+      secure: cAaTbQIdIWRbJAQ6LNOrh54NHB0EX+UCfXgiA+84L0iPlZQJW/a8gerv+DgOZ/Ds1+Fy0MDF5rFd880PrvYXcJweQQm0FCvJR5+wvH+5SGLuRZmyRwWPKPY2ElzW8X1cpMwUdieWG2M4IrdetS0Q2w4pKg664yksWAdmr8d/6a99rTKBfI5DpNDgFClZQCG9uAm68m2XwqM0tfvRtZf+LmTP1/mWjqMc1GXT9/4yLGTgvrmGwpqolpYfDe7G/I9yipV/yj03KYiQhfDTZ5rkzUAo4tmGXdOI4dG5aC4PiEccwv3yB8FEBlt4+R9EmBzdZwzI9zooxP1Qxb9UbbKnCjCXFwkucsOzn4yTyVWzYrYKhT0wRSbGSaJHiRiHvRuI02shVX0AmbgmvvK/FYJo/byBmFYDhhYTCxQfZNSRbz673nmohZnmOrwEPN+4sWXb1Jm7zUVxOoCMdjArS6yvvI/e400MmVf+Pe64KIoZoz0B0XKHzEX3ZoXWsHz21S6beLFwkcmWPtXajdYeI2mfjqglCrWUVCbDDaNCAZDpK29aHC1248FhpixPtghDD0EnKq+eYYPnW2V3ZlgHbYHYXiQZ+Q8+FnQKUfxi5n1pC0Bx4DUOA7fySMjwDoFLO6ENj0kMQJZ5DGlHeMoLw9ZvbZaSlOUIslXIGgOfKjHUcYw=
