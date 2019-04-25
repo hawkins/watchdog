@@ -1,15 +1,20 @@
 language: rust
 rust:
-- stable
-- beta
-- nightly
+  - stable
+  - beta
+  - nightly
 matrix:
   allow_failures:
-  - rust: nightly
+    - rust: nightly
   fast_finish: true
 os:
-- linux
-- osx
+  - linux
+  - osx
+before_deploy:
+  - ls target
+  - ls target/release/*
+  - mv target/release/watchdog "target/release/watchdog-$TRAVIS_TAG-$TRAVIS_OS_NAME"
+  - ls target/release/*
 deploy:
   #- provider: cargo
   #  skip_cleanup: true
@@ -25,11 +30,6 @@ deploy:
       tags: true
       condition: "$TRAVIS_RUST_VERSION = stable"
       #branch: master
-    before_deploy:
-      - ls target
-      - ls target/release/*
-      - mv target/release/watchdog "target/release/watchdog-$TRAVIS_TAG-$TRAVIS_OS_NAME"
-      - ls target/release/*
     file:
       - target/release/watchdog-*
     api_key:
