@@ -89,6 +89,8 @@ fn watch(m: &clap::ArgMatches) -> notify::Result<()> {
             }
         }
     } else {
+        // This can't happen anymore, due to Clap...
+        // TODO: Refactor this function to rid this case
         panic!("No means specified to match files - did you forget to use a path or glob?");
     }
 
@@ -144,13 +146,6 @@ fn main() {
                 .required(true),
         )
         .arg(
-            Arg::with_name("path")
-                .help("File path(s) used for matching files")
-                .value_name("PATH")
-                .multiple(true)
-                .last(true),
-        )
-        .arg(
             Arg::with_name("verbose")
                 .help("Enables verbose output")
                 .short("v")
@@ -163,6 +158,14 @@ fn main() {
                 .help("Glob used for matching files")
                 .value_name("GLOB")
                 .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("path")
+                .help("File path(s) used for matching files")
+                .value_name("PATH")
+                .multiple(true)
+                .last(true)
+                .required_unless_one(&["glob"]),
         )
         .get_matches();
 
